@@ -1,0 +1,24 @@
+name: OLM
+channels:
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1
+  - ca-certificates=2020.12.8
+  - certifi=2020.12.5
+  - ld_impl_linux-64=2.33.1
+  - libedit=3.1.20191231
+  - libffi=3.3
+  - libgcc-ng=9.1.0
+  - libstdcxx-ng=9.1.0
+  - ncurses=6.2
+  - openssl=1.1.1i
+  - pip=20.3.3
+  - python=3.8.5
+  - readline=8.0
+  - setuptools=51.0.0
+  - sqlite=3.33.0
+  - tabulate=0.8.7
+  - tk=8.6.10
+  - wheel=0.36.2
+  - xz=5.2.5
+  - zlib=1.2.11
