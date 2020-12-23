@@ -10,3 +10,7 @@ class Sandbox(TestCase):
         except AssertionError as e:
             e.args += ("hello!",)
             raise
+
+    def test2(self):
+        x = ['abc', 'def', 'ghi']
+        print('abc' in x)

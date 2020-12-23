@@ -8,6 +8,23 @@ class NamedObject:
     def __init__(self, name: str):
         self.name: str = name
 
+    def __str__(self) -> str:
+        return self.get_name()
+
+    def __eq__(self, other) -> bool:
+        if issubclass(other.__class__, NamedObject):
+            return other.get_name() == self.get_name()
+        else:
+            return False
+
+    def is_named(self, name: str, strict: bool = False) -> bool:
+        assert isinstance(name, str)
+
+        if strict:
+            return self.get_name() == name
+        else:
+            return simple_string_check(self.get_name(), name)
+
     def get_name(self) -> str:
         return self.name
 
@@ -16,7 +33,7 @@ def find_by_name(lst: List[NamedObject], name: str) -> List[int]:
     assert is_typed_list(lst, NamedObject)
     assert isinstance(name, str)
 
-    return find([simple_string_check(obj.name, name) for obj in lst])
+    return find([obj.is_named(name) for obj in lst])
 
 
 def find_unique_by_name(lst: List[NamedObject], name: str, objects_name: str = None) -> int:

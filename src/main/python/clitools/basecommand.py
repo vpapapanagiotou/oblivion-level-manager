@@ -22,11 +22,7 @@ class BaseCommand(NamedObject):
     def is_command(self, command_name: str) -> bool:
         assert isinstance(command_name, str)
 
-        for alternative_name in self.alternative_names:
-            if command_name == alternative_name:
-                return True
-
-        return False
+        return command_name in self.alternative_names
 
     def run(self, character: Character, args: List[str] = None) -> None:
         assert isinstance(character, Character)

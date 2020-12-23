@@ -20,9 +20,6 @@ class Skill(NamedObject):
         self.level_ups: int = 0
         self.attribute: Attribute = None
 
-    def __str__(self) -> str:
-        return self.get_name()
-
     def is_skill(self, name: str):
         return simple_string_check(self.name, name)
 
@@ -61,18 +58,10 @@ class Attribute(NamedObject):
 
         self.set_skills(skills)
 
-    def __str__(self) -> str:
-        return self.get_name()
-
-    def is_attribute(self, name: str) -> bool:
-        # Type check is handled by 'simple_string_check'
-
-        return simple_string_check(self.name, name)
-
     def has_skill(self, name: str) -> bool:
-        # Type check is handled by 'simple_string_check'
+        # Type check is handled by 'is_named'
 
-        return any([simple_string_check(skill.name, name) for skill in self.skills])
+        return any([skill.is_named(name) for skill in self.skills])
 
     def append_skill(self, skill: Skill):
         assert isinstance(skill, Skill)
@@ -127,7 +116,7 @@ class Character(NamedObject):
         for attribute in self.attributes:
             self.skills.extend(attribute.skills)
 
-        self.planned_attributes_idxs: List[int] = []
+        self.planned_attributes: List[Attribute] = []
 
     def get_name(self) -> str:
         return self.name + "_lvl" + str(self.level).zfill(2)
@@ -145,7 +134,7 @@ class Character(NamedObject):
     def can_level_up(self) -> bool:
         return get_major_skills_increase(self.skills) >= 10
 
-    def level_up(self, attribute_names: List[str]):
+    def level_up(self, attribute_names: List[str]) -> None:
         assert is_typed_list(attribute_names, str)
         assert len(attribute_names) == 3
 
@@ -176,17 +165,21 @@ class Character(NamedObject):
     def set_plan(self, attribute_names: List[str]) -> None:
         assert is_typed_list(attribute_names, str)
 
-        self.planned_attributes_idxs: List[int] = []
+        self.planned_attributes: List[Attribute] = []
         for attribute_name in attribute_names:
-            self.planned_attributes_idxs.append(find_unique_by_name(self.attributes, attribute_name))
+            idx: int = find_unique_by_name(self.attributes, attribute_name)
+            self.planned_attributes.append(self.attributes[idx])
 
     def get_max_skill_increase(self, skill: Skill):
         assert isinstance(skill, Skill)
 
+        if skill.attribute not in self.planned_attributes:
+            return 0
+
         if skill.is_major:
             d1: int = 10 - get_major_skills_increase(self.skills)
         else:
-            d1: int = 10 * (len(self.planned_attributes_idxs) - 1) - get_minor_skills_increase(self.skills)
+            d1: int = 10 * (len(self.planned_attributes) - 1) - get_minor_skills_increase(self.skills)
 
         d2: int = 10 - get_skills_increase(skill.attribute.skills)
 
