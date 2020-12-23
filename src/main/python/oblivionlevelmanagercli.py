@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import List
 
 from character import Character
+from clitools.TestCommand import TestCommand
 from clitools.basecommand import BaseCommand
 from clitools.helpcommand import HelpCommand
 from clitools.increaseskillcommand import IncreaseSkillCommand
@@ -12,6 +13,8 @@ from clitools.printcommand import PrintCommand
 from clitools.quitcommand import QuitCommand
 from clitools.savecommand import SaveCommand
 from clitools.setvaluecommand import SetValueCommand
+from tools.common import print_exception
+from tools.namedobject import find_unique_by_name
 
 start_message: str = """
 The Elder Scrolls IV: Oblivion
@@ -29,35 +32,42 @@ class OblivionLevelManagerCLI:
 
         help_command: HelpCommand = HelpCommand()
         self.commands: List[BaseCommand] = [PrintCommand(), SetValueCommand(), IncreaseSkillCommand(), LevelUpCommand(),
-                                            SaveCommand(), QuitCommand(), help_command]
+                                            SaveCommand(), QuitCommand(), help_command, TestCommand()]
         help_command.generate_help(self.commands)
 
     def start(self):
         print(start_message)
 
         while True:
-            self._run_cli_iteration()
             try:
-                pass
+                self._run_cli_iteration()
             except Exception as e:
-                print(e)
+                print_exception(e, "An unknown exception has occurred. It is possible that the command failed and the character may be at a 'broken' state. You should avoid saving if you are unsure what happened.")
+                raise  # debug
 
     def _run_cli_iteration(self):
-        user_input = input("\n> ")
+        user_input: List[str] = []
+        try:
+            user_input = input("\n> ").split()
+        except Exception as e:
+            print_exception(e, "Error: not valid command: " + " ".join(user_input))
+            return
 
-        args = user_input.split()
-        command_name = args[0].lower()
+        if len(user_input) == 0:
+            return
+
+        command_name = user_input[0]
+        command_args = user_input[1:]
 
         for command in self.commands:
             if command.is_command(command_name):
-                command.run(self.character, args[1:])
-                return
-
-        print("Unknown command: " + command_name)
+                command.run(character, command_args)
+                break
 
 
 if __name__ == "__main__":
     parser: ArgumentParser = ArgumentParser()
+    parser.add_argument('--path', default=",", type=str, help="Path to load/save the character files")
     sp = parser.add_subparsers(dest='action')
 
     parser_new = sp.add_parser('new', help="Create a new character")
@@ -69,46 +79,35 @@ if __name__ == "__main__":
                              help="The level of the character to load (default: max available)")
 
     args: Namespace = parser.parse_args()
-    print(args)
+
+    file_path: Path = Path(args.path)
 
     if args.action == 'new':
-        p: Path = Path(".")
-        file_list = [x for x in p.glob(args.name + "_*.pickle")]
-
+        file_list = [x for x in file_path.glob(args.name + "_*.pickle")]
         if len(file_list) != 0:
             print("A character with name '" + args.name + "' already exists. Abort")
             exit(0)
-
         character: Character = Character(args.name)
 
     elif args.action == 'load':
-        p: Path = Path(".")
-        file_list = [x for x in p.glob(args.name + "_*.pickle")]
-
+        file_list = [x for x in file_path.glob(args.name + "_*.pickle")]
         if len(file_list) == 0:
             print("No character with name '" + args.name + "' was found. Abort")
             exit(0)
-
         if args.level < 0:
             print("No non-positive levels are supported. Abort")
             exit(0)
-
         if args.level == 0:
-            max_level: int = 1
+            level: int = 1
             for file in file_list:
-                new_level: int = int(file.name[len(args.name) + 4:-7])
-                if new_level > max_level:
-                    max_level = new_level
-            file_name = args.name + "_lvl" + str(max_level).zfill(2) + ".pickle"
+                level = max(level, int(file.name[len(args.name) + 4:-7]))
         else:
-            file_name = args.name + "_lvl" + str(args.level).zfill(2) + ".pickle"
-
-        file: Path = Path(file_name)
+            level = args.level
+        file: Path = Path(args.name + "_lvl" + str(level).zfill(2) + ".pickle")
         if not file.exists():
-            print("Cannot file file '" + file_name + "'. Abort")
+            print("Cannot file file '" + file.name + "'. Abort")
             exit(0)
-
-        character: Character = pickle.load(open(file_name, 'rb'))
+        character: Character = pickle.load(open(file, 'rb'))
 
     elif args.action is None:
         parser.print_usage()
@@ -116,6 +115,17 @@ if __name__ == "__main__":
 
     else:
         raise ValueError("This should never be reached")
+
+    # DEBUG
+    if True:
+        character.set_skill_mode("blunt")
+        character.set_skill_mode("block")
+        character.set_skill_mode("light")
+        character.set_skill_mode("sneak")
+        character.set_skill_mode("marksman")
+        character.set_skill_mode("alchemy")
+        character.set_skill_mode("alteration")
+        character.set_plan(["str", "end", "will"])
 
     cli: OblivionLevelManagerCLI = OblivionLevelManagerCLI(character)
     cli.start()

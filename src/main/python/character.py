@@ -20,52 +20,61 @@ class Skill(NamedObject):
         self.level_ups: int = 0
         self.attribute: Attribute = None
 
+    def __str__(self) -> str:
+        return self.get_name()
+
     def is_skill(self, name: str):
         return simple_string_check(self.name, name)
 
     def increase(self, value: int = 1):
         self.level_ups += value
 
-    def decrease(self, value: int = 1):
-        self.level_ups -= value
 
-    def get_name(self):
-        if self.is_major:
-            return self.name + "*"
-        else:
-            return self.name
+def get_skills_increase(skills: List[Skill]) -> int:
+    assert is_typed_list(skills, Skill)
+
+    return sum([skill.level_ups for skill in skills])
 
 
-class SkillOwner:
-    def __init__(self, skills: List[Skill] = None):
-        assert is_typed_list(skills, Skill, True)
+def get_major_skills_increase(skills: List[Skill]) -> int:
+    assert is_typed_list(skills, Skill)
 
-        if skills is None:
-            skills = list()
-
-        self.skills: List[Skill] = skills
-
-    def get_skills_increase(self):
-        return sum([skill.level_ups for skill in self.skills])
-
-    def get_major_skills_increase(self):
-        return sum([skill.level_ups for skill in self.skills if skill.is_major])
-
-    def get_minor_skills_increase(self):
-        return sum([skill.level_ups for skill in self.skills if not skill.is_major])
+    return sum([skill.level_ups for skill in skills if skill.is_major])
 
 
-class Attribute(NamedObject, SkillOwner):
-    def __init__(self, name: str, value: int = 50):
+def get_minor_skills_increase(skills: List[Skill]) -> int:
+    assert is_typed_list(skills, Skill)
+
+    return sum([skill.level_ups for skill in skills if not skill.is_major])
+
+
+class Attribute(NamedObject):
+    def __init__(self, name: str, value: int = 50, skills: List[Skill] = []):
         assert isinstance(name, str)
         assert isinstance(value, int)
+        # no need to check skills for correct type because it is checked by 'set_skills'
 
-        NamedObject.__init__(self, name)
-        SkillOwner.__init__(self)
+        super().__init__(name)
 
         self.value: int = value
+        self.skills: List[Skill] = []
 
-    def assign_skill(self, skill: Skill):
+        self.set_skills(skills)
+
+    def __str__(self) -> str:
+        return self.get_name()
+
+    def is_attribute(self, name: str) -> bool:
+        # Type check is handled by 'simple_string_check'
+
+        return simple_string_check(self.name, name)
+
+    def has_skill(self, name: str) -> bool:
+        # Type check is handled by 'simple_string_check'
+
+        return any([simple_string_check(skill.name, name) for skill in self.skills])
+
+    def append_skill(self, skill: Skill):
         assert isinstance(skill, Skill)
         assert skill.attribute is None
 
@@ -73,19 +82,16 @@ class Attribute(NamedObject, SkillOwner):
         skill.attribute = self
 
     def set_skills(self, skills: List[Skill]):
-        assert is_typed_list(skills, Skill)
+        assert is_typed_list(skills, Skill, True)
 
-        for skill in skills:
-            self.assign_skill(skill)
-
-    def is_attribute(self, name: str) -> bool:
-        return simple_string_check(self.name, name)
-
-    def has_skill(self, name: str) -> bool:
-        return any([simple_string_check(skill.name, name) for skill in self.skills])
+        if skills is None or len(skills) == 0:
+            self.skills = []
+        else:
+            for skill in skills:
+                self.append_skill(skill)
 
     def get_attribute_gain(self) -> int:
-        n = self.get_skills_increase()
+        n = get_skills_increase(self.skills)
         if n == 0:
             return 1
         elif 1 <= n <= 4:
@@ -98,78 +104,37 @@ class Attribute(NamedObject, SkillOwner):
             return 5
 
 
-class Character(NamedObject, SkillOwner):
+class Character(NamedObject):
     def __init__(self, name: str, level: int = 1):
         assert isinstance(name, str)
         assert isinstance(level, int)
 
-        NamedObject.__init__(self, name)
-        SkillOwner.__init__(self)
+        super().__init__(name)
 
         self.level: int = level
-
-        skl_blade: Skill = Skill("Blade")
-        skl_blunt: Skill = Skill("Blunt")
-        skl_hand2hand: Skill = Skill("Hand to Hand")
-
-        skl_armorer: Skill = Skill("Armorer")
-        skl_block: Skill = Skill("Block")
-        skl_heavyarmor: Skill = Skill("Heavy armor")
-
-        skl_athletics: Skill = Skill("Athletics")
-        skl_acrobatics: Skill = Skill("Acrobatics")
-        skl_lightarmor: Skill = Skill("Light armor")
-
-        skl_security: Skill = Skill("Security")
-        skl_sneak: Skill = Skill("Sneak")
-        skl_marksman: Skill = Skill("Marksman")
-
-        skl_mercantile: Skill = Skill("Mercantile")
-        skl_speechcraft: Skill = Skill("Speechcraft")
-        skl_illusion: Skill = Skill("Illusion")
-
-        skl_alchemy: Skill = Skill("Alchemy")
-        skl_conjuration: Skill = Skill("Conjuration")
-        skl_mysticism: Skill = Skill("Mysticism")
-
-        skl_alteration: Skill = Skill("Alteration")
-        skl_destruction: Skill = Skill("Destruction")
-        skl_restoration: Skill = Skill("Restoration")
-
-        att_strength: Attribute = Attribute("Strength")
-        att_strength.set_skills([skl_blade, skl_blunt, skl_hand2hand])
-
-        att_endurance: Attribute = Attribute("Endurance")
-        att_endurance.set_skills([skl_armorer, skl_block, skl_heavyarmor])
-
-        att_speed: Attribute = Attribute("Speed")
-        att_speed.set_skills([skl_athletics, skl_acrobatics, skl_lightarmor])
-
-        att_agility: Attribute = Attribute("Agility")
-        att_agility.set_skills([skl_security, skl_sneak, skl_marksman])
-
-        att_personality: Attribute = Attribute("Personality")
-        att_personality.set_skills([skl_mercantile, skl_speechcraft, skl_illusion])
-
-        att_intelligence: Attribute = Attribute("Intelligence")
-        att_intelligence.set_skills([skl_alchemy, skl_conjuration, skl_mysticism])
-
-        att_willpower: Attribute = Attribute("Willpower")
-        att_willpower.set_skills([skl_alteration, skl_destruction, skl_restoration])
-
-        att_luck: Attribute = Attribute("Luck")
-
-        self.attributes: List[Attribute] = [att_strength, att_endurance, att_speed, att_agility, att_personality,
-                                            att_intelligence, att_willpower, att_luck]
+        self.attributes: List[Attribute] = [
+            Attribute("Strength", skills=[Skill("Blade"), Skill("Blunt"), Skill("Hand to Hand")]),
+            Attribute("Endurance", skills=[Skill("Armorer"), Skill("Block"), Skill("Heavy Armor")]),
+            Attribute("Speed", skills=[Skill("Athletics"), Skill("Acrobatics"), Skill("Light Armor")]),
+            Attribute("Agility", skills=[Skill("Security"), Skill("Sneak"), Skill("Marksman")]),
+            Attribute("Personality", skills=[Skill("Mercantile"), Skill("Speechcraft"), Skill("Illusion")]),
+            Attribute("Intelligence", skills=[Skill("Alchemy"), Skill("Conjuration"), Skill("Mysticism")]),
+            Attribute("Willpower", skills=[Skill("Alteration"), Skill("Destruction"), Skill("Restoration")]),
+            Attribute("Luck")
+        ]
+        self.skills: List[Skill] = []
 
         for attribute in self.attributes:
             self.skills.extend(attribute.skills)
+
+        self.planned_attributes_idxs: List[int] = []
 
     def get_name(self) -> str:
         return self.name + "_lvl" + str(self.level).zfill(2)
 
     def increase_skill(self, skill_name: str, value: int = 1) -> (str, str):
         assert isinstance(skill_name, str)
+        assert isinstance(value, int)
 
         idx: int = find_unique_by_name(self.skills, skill_name)
         skill = self.skills[idx]
@@ -178,12 +143,9 @@ class Character(NamedObject, SkillOwner):
         return skill.name, skill.attribute.name
 
     def can_level_up(self) -> bool:
-        return self.get_major_skills_increase() >= 10
+        return get_major_skills_increase(self.skills) >= 10
 
     def level_up(self, attribute_names: List[str]):
-        if not self.can_level_up():
-            raise RuntimeError("Cannot level up yet")
-
         assert is_typed_list(attribute_names, str)
         assert len(attribute_names) == 3
 
@@ -191,8 +153,10 @@ class Character(NamedObject, SkillOwner):
         for attribute_name in attribute_names:
             idx = find_unique_by_name(self.attributes, attribute_name)
             attribute_idxs.append(idx)
+        assert len(set(attribute_idxs)) == 3
 
-        assert len(set(attribute_idxs)) == 3, "Exactly 3 unique attribute names must be provided"
+        if not self.can_level_up():
+            raise RuntimeError("Cannot level up yet")
 
         table = []
         for idx in attribute_idxs:
@@ -208,6 +172,25 @@ class Character(NamedObject, SkillOwner):
         for skill in self.skills:
             skill.value += skill.level_ups
             skill.level_ups = 0
+
+    def set_plan(self, attribute_names: List[str]) -> None:
+        assert is_typed_list(attribute_names, str)
+
+        self.planned_attributes_idxs: List[int] = []
+        for attribute_name in attribute_names:
+            self.planned_attributes_idxs.append(find_unique_by_name(self.attributes, attribute_name))
+
+    def get_max_skill_increase(self, skill: Skill):
+        assert isinstance(skill, Skill)
+
+        if skill.is_major:
+            d1: int = 10 - get_major_skills_increase(self.skills)
+        else:
+            d1: int = 10 * (len(self.planned_attributes_idxs) - 1) - get_minor_skills_increase(self.skills)
+
+        d2: int = 10 - get_skills_increase(skill.attribute.skills)
+
+        return min(d1, d2)
 
     def set_level_value(self, value: int) -> int:
         assert isinstance(value, int)
@@ -234,7 +217,7 @@ class Character(NamedObject, SkillOwner):
 
         return self.skills[idx].get_name(), self.skills[idx].value
 
-    def set_skill_mode(self, skill_name: str, is_major: bool) -> (str, bool):
+    def set_skill_mode(self, skill_name: str, is_major: bool = True) -> (str, bool):
         assert isinstance(skill_name, str)
         assert isinstance(is_major, bool)
 

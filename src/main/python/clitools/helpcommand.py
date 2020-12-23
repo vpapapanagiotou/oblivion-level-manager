@@ -14,7 +14,7 @@ class HelpCommand(BaseCommand):
 
         self.help: str = "not initialized yet"
 
-    def run_command(self, character: Character, args: List[str] = None):
+    def _run(self, character: Character, args: List[str] = None):
         assert is_typed_list(args, str)
 
         print(self.help)

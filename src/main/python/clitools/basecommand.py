@@ -2,6 +2,7 @@ from typing import List
 
 from character import Character
 from tools.checks import is_typed_list
+from tools.common import print_exception
 from tools.namedobject import NamedObject
 
 
@@ -9,11 +10,13 @@ class BaseCommand(NamedObject):
     def __init__(self, name: str):
         assert isinstance(name, str)
 
-        NamedObject.__init__(self, name)
+        super().__init__(name)
 
-        self.alternative_names: List[str] = list((name.lower(),))
+        self.alternative_names: List[str] = [name.lower()]
 
     def add_alternative_name(self, name: str):
+        assert isinstance(name, str)
+
         self.alternative_names.append(name.lower())
 
     def is_command(self, command_name: str) -> bool:
@@ -25,21 +28,18 @@ class BaseCommand(NamedObject):
 
         return False
 
-    def run(self, character: Character, args: List[str] = None):
+    def run(self, character: Character, args: List[str] = None) -> None:
         assert isinstance(character, Character)
         assert is_typed_list(args, str, True)
 
         try:
-            self.run_command(character, args)
+            self._run(character, args)
         except Exception as e:
-            if len(e.args) == 0:
-                print("There was an error")
-            else:
-                print(e)
+            print_exception(e)
+            raise  # debug
 
-    def run_command(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]) -> None:
         raise NotImplementedError("Command not implemented: " + self.name)
 
     def get_help_string(self) -> List[str]:
-        # raise NotImplementedError("Command not implemented: " + self.name)
-        return ["coming soon"]
+        raise NotImplementedError("Command not implemented: " + self.name)

@@ -9,7 +9,7 @@ class SaveCommand(BaseCommand):
     def __init__(self):
         BaseCommand.__init__(self, "save")
 
-    def run_command(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]):
         pickle.dump(character, open(character.get_name() + ".pickle", "wb"))
 
     def get_help_string(self) -> List[str]:

@@ -16,7 +16,5 @@ class QuitCommand(BaseCommand):
 
         return [h]
 
-    def run_command(self, character: Character, args: List[str] = None):
-        assert is_typed_list(args, str, True)
-
+    def _run(self, character: Character, args: List[str] = None):
         exit(0)

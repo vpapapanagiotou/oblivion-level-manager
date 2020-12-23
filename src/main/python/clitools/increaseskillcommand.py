@@ -2,6 +2,7 @@ from typing import List
 
 from character import Character
 from clitools.basecommand import BaseCommand
+from tools.common import print_exception
 
 
 class IncreaseSkillCommand(BaseCommand):
@@ -9,6 +10,7 @@ class IncreaseSkillCommand(BaseCommand):
         BaseCommand.__init__(self, "increase-skill")
 
         self.add_alternative_name("increase")
+        self.add_alternative_name("inc-skill")
         self.add_alternative_name("inc")
 
     def get_help_string(self) -> List[str]:
@@ -17,7 +19,7 @@ class IncreaseSkillCommand(BaseCommand):
 
         return [usage, h]
 
-    def run_command(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]):
         if len(args) == 0:
             raise ValueError("No skill name was provided")
 
@@ -26,7 +28,8 @@ class IncreaseSkillCommand(BaseCommand):
                 skill_name, attribute_name = character.increase_skill(args[0])
                 print("Skill " + skill_name + " [" + attribute_name + "] increased!")
             except ValueError as e:
-                print("Could not increase skill:", e)
+                e.args += ("Could not increase skill",)
+                raise
 
         elif len(args) == 2:
             try:
@@ -34,7 +37,8 @@ class IncreaseSkillCommand(BaseCommand):
                 skill_name, attribute_name = character.increase_skill(args[0], increase_value)
                 print("Skill " + skill_name + " [" + attribute_name + "] increased by " + str(increase_value) + "!")
             except ValueError as e:
-                print("Could not increase skill:", e)
+                e.args += ("Could not increase skill",)
+                raise
 
         else:
             raise ValueError("More than one skill names were provided. Additional names will be ignored")

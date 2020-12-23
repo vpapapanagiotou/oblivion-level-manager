@@ -19,5 +19,5 @@ class LevelUpCommand(BaseCommand):
 
         return [usage, h]
 
-    def run_command(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]):
         character.level_up(args)
