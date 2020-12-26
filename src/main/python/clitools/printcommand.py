@@ -2,7 +2,7 @@ from typing import List, NoReturn
 
 from tabulate import tabulate
 
-from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase, Attribute
+from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase
 from clitools.basecommand import BaseCommand
 from tools.common import simple_string_check
 from tools.formatting import format_skill, format_base, BColors
@@ -50,11 +50,10 @@ class PrintCommand(BaseCommand):
 def print_summary(character: Character) -> NoReturn:
     assert isinstance(character, Character)
 
-    table = []
-    table.append(["Level", character.level])
-    table.append(["Major skill increases", get_major_skills_increase(character.skills)])
-    table.append(["Minor skill increases", get_minor_skills_increase(character.skills)])
-    table.append(["Total skill increases", get_skills_increase(character.skills)])
+    table = [["Level", character.level],
+             ["Major skill increases", get_major_skills_increase(character.skills)],
+             ["Minor skill increases", get_minor_skills_increase(character.skills)],
+             ["Total skill increases", get_skills_increase(character.skills)]]
     print("\nCHARACTER " + character.name)
     print(tabulate(table))
 
@@ -98,8 +97,7 @@ def print_plan(character: Character) -> NoReturn:
     plan_headers = ("Attribute", "pts", "Skill", "pts@" + str(character.level), "inc", "rem inc")
 
     table = []
-    for idx in character.planned_attributes_idxs:
-        attribute: Attribute = character.attributes[idx]
+    for attribute in character.planned_attributes:
 
         attribute_table = []
         for skill in attribute.skills:
