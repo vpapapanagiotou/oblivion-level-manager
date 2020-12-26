@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, NoReturn
 
 from tabulate import tabulate
 
@@ -23,7 +23,7 @@ class PrintCommand(BaseCommand):
 
         return [usage, h]
 
-    def _run(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]) -> NoReturn:
         if len(args) > 1:
             raise ValueError("Too many input arguments")
 
@@ -47,7 +47,7 @@ class PrintCommand(BaseCommand):
             raise ValueError("Unknown '" + args[0] + "' Can't print")
 
 
-def print_summary(character: Character) -> None:
+def print_summary(character: Character) -> NoReturn:
     assert isinstance(character, Character)
 
     table = []
@@ -59,7 +59,7 @@ def print_summary(character: Character) -> None:
     print(tabulate(table))
 
 
-def print_attributes(character: Character) -> None:
+def print_attributes(character: Character) -> NoReturn:
     assert isinstance(character, Character)
 
     attribute_headers = ("Attribute", "pts", "inc", "skill pts")
@@ -73,7 +73,7 @@ def print_attributes(character: Character) -> None:
     print(tabulate(table, headers=attribute_headers))
 
 
-def print_skills(character: Character) -> None:
+def print_skills(character: Character) -> NoReturn:
     assert isinstance(character, Character)
 
     skill_headers = ("Attribute", "Skill", "pts@" + str(character.level), "inc", "pts")
@@ -92,7 +92,7 @@ def print_skills(character: Character) -> None:
     print(tabulate(table, headers=skill_headers))
 
 
-def print_plan(character: Character):
+def print_plan(character: Character) -> NoReturn:
     assert isinstance(character, Character)
 
     plan_headers = ("Attribute", "pts", "Skill", "pts@" + str(character.level), "inc", "rem inc")
@@ -103,7 +103,7 @@ def print_plan(character: Character):
 
         attribute_table = []
         for skill in attribute.skills:
-            d: int = character.get_max_skill_increase(skill)
+            d: int = character.get_remaining_skill_increase(skill)
             if d > 0:
                 dstr: str = str(d)
             elif d == 0:
@@ -117,4 +117,4 @@ def print_plan(character: Character):
         table.extend(attribute_table)
 
     print("\nPLAN")
-    print(tabulate(table, headers=plan_headers, colalign=("left","right",)))
+    print(tabulate(table, headers=plan_headers, colalign=("left", "right",)))

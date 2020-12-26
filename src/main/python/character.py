@@ -3,8 +3,7 @@ from typing import List
 from tabulate import tabulate
 
 from tools.checks import is_typed_list
-from tools.common import simple_string_check
-from tools.namedobject import NamedObject, find_unique_by_name
+from tools.namedobject import NamedObject, find_unique_by_name, get_unique_by_name, get_unique_by_names
 
 
 class Skill(NamedObject):
@@ -13,15 +12,12 @@ class Skill(NamedObject):
         assert isinstance(is_major, bool)
         assert isinstance(value, int)
 
-        super(Skill, self).__init__(name)
+        super().__init__(name)
 
         self.is_major: bool = is_major
         self.value: int = value
         self.level_ups: int = 0
         self.attribute: Attribute = None
-
-    def is_skill(self, name: str):
-        return simple_string_check(self.name, name)
 
     def increase(self, value: int = 1):
         self.level_ups += value
@@ -135,42 +131,34 @@ class Character(NamedObject):
         return get_major_skills_increase(self.skills) >= 10
 
     def level_up(self, attribute_names: List[str]) -> None:
-        assert is_typed_list(attribute_names, str)
-        assert len(attribute_names) == 3
-
-        attribute_idxs: List[int] = []
-        for attribute_name in attribute_names:
-            idx = find_unique_by_name(self.attributes, attribute_name)
-            attribute_idxs.append(idx)
-        assert len(set(attribute_idxs)) == 3
+        # Type checking is performed by 'get_unique_by_names'
+        attributes: List[Attribute] = get_unique_by_names(self.attributes, attribute_names)
+        assert len(attributes) == 3
 
         if not self.can_level_up():
             raise RuntimeError("Cannot level up yet")
 
-        table = []
-        for idx in attribute_idxs:
-            table.append([self.attributes[idx].get_name(), self.attributes[idx].get_attribute_gain()])
+        table = [[attribute.get_name(), attribute.get_attribute_gain()] for attribute in attributes]
         print("Will level up with the following attributes:")
         print(tabulate(table))
 
         self.level += 1
 
-        for idx in attribute_idxs:
-            self.attributes[idx].value += self.attributes[idx].get_attribute_gain()
+        for attribute in attributes:
+            attribute.value += attribute.get_attribute_gain()
 
         for skill in self.skills:
             skill.value += skill.level_ups
             skill.level_ups = 0
 
     def set_plan(self, attribute_names: List[str]) -> None:
-        assert is_typed_list(attribute_names, str)
+        # Type checking is performed by 'get_unique_by_names'
+        attributes: List[Attribute] = get_unique_by_names(self.attributes, attribute_names)
+        assert len(attributes) == 2 or len(attributes) == 3
 
-        self.planned_attributes: List[Attribute] = []
-        for attribute_name in attribute_names:
-            idx: int = find_unique_by_name(self.attributes, attribute_name)
-            self.planned_attributes.append(self.attributes[idx])
+        self.planned_attributes: List[Attribute] = attributes
 
-    def get_max_skill_increase(self, skill: Skill):
+    def get_remaining_skill_increase(self, skill: Skill):
         assert isinstance(skill, Skill)
 
         if skill.attribute not in self.planned_attributes:
@@ -196,25 +184,25 @@ class Character(NamedObject):
         assert isinstance(attribute_name, str)
         assert isinstance(value, int)
 
-        idx = find_unique_by_name(self.attributes, attribute_name)
-        self.attributes[idx].value = value
+        attribute: Attribute = get_unique_by_name(self.attributes, attribute_name)
+        attribute.value = value
 
-        return self.attributes[idx].get_name(), self.attributes[idx].value
+        return attribute.get_name(), attribute.value
 
     def set_skill_value(self, skill_name: str, value: int) -> (str, int):
         assert isinstance(skill_name, str)
         assert isinstance(value, int)
 
-        idx = find_unique_by_name(self.skills, skill_name)
-        self.skills[idx].value = value
+        skill: Skill = get_unique_by_name(self.skills, skill_name)
+        skill.value = value
 
-        return self.skills[idx].get_name(), self.skills[idx].value
+        return skill.get_name(), skill.value
 
     def set_skill_mode(self, skill_name: str, is_major: bool = True) -> (str, bool):
         assert isinstance(skill_name, str)
         assert isinstance(is_major, bool)
 
-        idx = find_unique_by_name(self.skills, skill_name)
-        self.skills[idx].is_major = is_major
+        skill: Skill = get_unique_by_name(self.skills, skill_name)
+        skill.is_major = is_major
 
-        return self.skills[idx].get_name(), self.skills[idx].is_major
+        return skill.get_name(), skill.is_major

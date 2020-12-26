@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, NoReturn
 
 from character import Character
 from clitools.basecommand import BaseCommand
-from tools.checks import is_typed_list
 
 
 class QuitCommand(BaseCommand):
@@ -16,5 +15,5 @@ class QuitCommand(BaseCommand):
 
         return [h]
 
-    def _run(self, character: Character, args: List[str] = None):
+    def _run(self, character: Character, args: List[str] = None) -> NoReturn:
         exit(0)

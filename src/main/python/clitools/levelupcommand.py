@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, NoReturn
 
 from character import Character
 from clitools.basecommand import BaseCommand
-from tools.namedobject import find_by_name
 
 
 class LevelUpCommand(BaseCommand):
@@ -19,5 +18,5 @@ class LevelUpCommand(BaseCommand):
 
         return [usage, h]
 
-    def _run(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]) -> NoReturn:
         character.level_up(args)

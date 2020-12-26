@@ -1,5 +1,5 @@
 from textwrap import wrap
-from typing import List
+from typing import List, NoReturn
 
 from tabulate import tabulate
 
@@ -14,7 +14,7 @@ class HelpCommand(BaseCommand):
 
         self.help: str = "not initialized yet"
 
-    def _run(self, character: Character, args: List[str] = None):
+    def _run(self, character: Character, args: List[str] = None) -> NoReturn:
         assert is_typed_list(args, str)
 
         print(self.help)
@@ -22,7 +22,7 @@ class HelpCommand(BaseCommand):
     def get_help_string(self) -> List[str]:
         return ["Shows this help"]
 
-    def generate_help(self, commands: List[BaseCommand]):
+    def generate_help(self, commands: List[BaseCommand]) -> NoReturn:
         assert is_typed_list(commands, BaseCommand)
 
         table = []

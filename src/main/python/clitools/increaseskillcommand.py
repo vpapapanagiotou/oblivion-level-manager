@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, NoReturn
 
 from character import Character
 from clitools.basecommand import BaseCommand
-from tools.common import print_exception
 
 
 class IncreaseSkillCommand(BaseCommand):
@@ -19,7 +18,7 @@ class IncreaseSkillCommand(BaseCommand):
 
         return [usage, h]
 
-    def _run(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]) -> NoReturn:
         if len(args) == 0:
             raise ValueError("No skill name was provided")
 

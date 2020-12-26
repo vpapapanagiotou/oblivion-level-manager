@@ -2,7 +2,7 @@ from typing import List
 
 from character import Character
 from clitools.basecommand import BaseCommand
-from tools.common import simple_string_check, print_exception
+from tools.common import simple_string_check
 
 
 class SetValueCommand(BaseCommand):
@@ -19,9 +19,10 @@ class SetValueCommand(BaseCommand):
 
         return [usage, h]
 
-    def _run(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]) -> NoReturn:
         if len(args) != 2 and len(args) != 3:
-            raise ValueError("Command 'set-value' takes exactly 2 or 3 arguments: 'level'/'attribute'/'skill', [name,] value")
+            raise ValueError(
+                "Command 'set-value' takes exactly 2 or 3 arguments: 'level'/'attribute'/'skill', [name,] value")
 
         if simple_string_check("level", args[0]):
             if len(args) != 2:

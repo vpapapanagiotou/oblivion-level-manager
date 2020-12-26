@@ -14,7 +14,6 @@ from clitools.quitcommand import QuitCommand
 from clitools.savecommand import SaveCommand
 from clitools.setvaluecommand import SetValueCommand
 from tools.common import print_exception
-from tools.namedobject import find_unique_by_name
 
 start_message: str = """
 The Elder Scrolls IV: Oblivion
@@ -42,7 +41,8 @@ class OblivionLevelManagerCLI:
             try:
                 self._run_cli_iteration()
             except Exception as e:
-                print_exception(e, "An unknown exception has occurred. It is possible that the command failed and the character may be at a 'broken' state. You should avoid saving if you are unsure what happened.")
+                print_exception(e,
+                                "An unknown exception has occurred. It is possible that the command failed and the character may be at a 'broken' state. You should avoid saving if you are unsure what happened.")
                 raise  # debug
 
     def _run_cli_iteration(self):

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, NoReturn
 
 from character import Character
 from tools.checks import is_typed_list
@@ -14,7 +14,7 @@ class BaseCommand(NamedObject):
 
         self.alternative_names: List[str] = [name.lower()]
 
-    def add_alternative_name(self, name: str):
+    def add_alternative_name(self, name: str) -> NoReturn:
         assert isinstance(name, str)
 
         self.alternative_names.append(name.lower())
@@ -24,7 +24,7 @@ class BaseCommand(NamedObject):
 
         return command_name in self.alternative_names
 
-    def run(self, character: Character, args: List[str] = None) -> None:
+    def run(self, character: Character, args: List[str] = None) -> NoReturn:
         assert isinstance(character, Character)
         assert is_typed_list(args, str, True)
 
@@ -34,7 +34,7 @@ class BaseCommand(NamedObject):
             print_exception(e)
             raise  # debug
 
-    def _run(self, character: Character, args: List[str]) -> None:
+    def _run(self, character: Character, args: List[str]) -> NoReturn:
         raise NotImplementedError("Command not implemented: " + self.name)
 
     def get_help_string(self) -> List[str]:

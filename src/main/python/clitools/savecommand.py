@@ -1,5 +1,5 @@
 import pickle
-from typing import List
+from typing import List, NoReturn
 
 from character import Character
 from clitools.basecommand import BaseCommand
@@ -9,7 +9,7 @@ class SaveCommand(BaseCommand):
     def __init__(self):
         BaseCommand.__init__(self, "save")
 
-    def _run(self, character: Character, args: List[str]):
+    def _run(self, character: Character, args: List[str]) -> NoReturn:
         pickle.dump(character, open(character.get_name() + ".pickle", "wb"))
 
     def get_help_string(self) -> List[str]:
