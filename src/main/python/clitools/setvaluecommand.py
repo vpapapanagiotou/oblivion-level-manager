@@ -14,7 +14,7 @@ class SetValueCommand(BaseCommand):
         self.add_alternative_name("setval")
 
     def get_help_string(self) -> List[str]:
-        usage: str = "Usage: " + self.name + " { level | attribute | skill } [name] value"
+        usage: str = "Usage: " + self.name + " {level|attribute|skill} [name] value"
         h: str = "Utility to set-up your character after creation. Sub-commands 'attribute' and 'skill' require a 'name' argument (i.e. name of the attribute or skill whose value is being set)."
 
         return [usage, h]

@@ -15,7 +15,7 @@ class PrintCommand(BaseCommand):
         self.add_alternative_name("show")
 
     def get_help_string(self) -> List[str]:
-        usage: str = "Usage: " + self.name + " [all/character/attributes/skills/plan]"
+        usage: str = "Usage: " + self.name + " [all|character|attributes|skills|plan]"
         h: str = "Print information about your character, attributes, skills, or level-up plan"
 
         return [usage, h]

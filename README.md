@@ -46,11 +46,11 @@ optional arguments:
 ## List of commands
 
 ```
-print           Usage: print [all/character/attributes/skills/plan]
+print           Usage: print [all|character|attributes|skills|plan]
                 Print information about your character, attributes, skills, or level-
                 up plan
                 Alternative names: show
-set-value       Usage: set-value { level | attribute | skill } [name] value
+set-value       Usage: set-value {level|attribute|skill } [name] value
                 Utility to set-up your character after creation. Sub-commands
                 'attribute' and 'skill' require a 'name' argument (i.e. name of the
                 attribute or skill whose value is being set).
