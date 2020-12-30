@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List
 
 from character import Character
-from clitools.TestCommand import TestCommand
 from clitools.basecommand import BaseCommand
 from clitools.helpcommand import HelpCommand
 from clitools.increaseskillcommand import IncreaseSkillCommand
@@ -31,7 +30,7 @@ class OblivionLevelManagerCLI:
 
         help_command: HelpCommand = HelpCommand()
         self.commands: List[BaseCommand] = [PrintCommand(), SetValueCommand(), IncreaseSkillCommand(), LevelUpCommand(),
-                                            SaveCommand(), QuitCommand(), help_command, TestCommand()]
+                                            SaveCommand(), QuitCommand(), help_command]
         help_command.generate_help(self.commands)
 
     def start(self):
@@ -115,17 +114,6 @@ if __name__ == "__main__":
 
     else:
         raise ValueError("This should never be reached")
-
-    # DEBUG
-    if True:
-        character.set_skill_mode("blunt")
-        character.set_skill_mode("block")
-        character.set_skill_mode("light")
-        character.set_skill_mode("sneak")
-        character.set_skill_mode("marksman")
-        character.set_skill_mode("alchemy")
-        character.set_skill_mode("alteration")
-        character.set_plan(["str", "end", "will"])
 
     cli: OblivionLevelManagerCLI = OblivionLevelManagerCLI(character)
     cli.start()

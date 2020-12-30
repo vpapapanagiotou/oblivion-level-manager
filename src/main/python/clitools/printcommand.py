@@ -10,16 +10,13 @@ from tools.formatting import format_skill, format_base, BColors
 
 class PrintCommand(BaseCommand):
     def __init__(self):
-        BaseCommand.__init__(self, "print-character")
+        BaseCommand.__init__(self, "print")
 
-        self.add_alternative_name("print")
-        self.add_alternative_name("show-character")
         self.add_alternative_name("show")
-        self.add_alternative_name("character")
 
     def get_help_string(self) -> List[str]:
         usage: str = "Usage: " + self.name + " [all/character/attributes/skills/plan]"
-        h: str = "Print information about your character"
+        h: str = "Print information about your character, attributes, skills, or level-up plan"
 
         return [usage, h]
 

@@ -6,15 +6,16 @@ A level manager utility for the game *The Elder Scrolls IV: Oblivion*.
 ### General use:
 
 ```
-usage: python oblivionlevelmanagercli.py [-h] {new,load} ...
+usage: oblivionlevelmanagercli.py [-h] [--path PATH] {new,load} ...
 
 positional arguments:
   {new,load}
-    new       Create a new character
-    load      Load a character
+    new        Create a new character
+    load       Load a character
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help   show this help message and exit
+  --path PATH  Path to load/save the character files
 ```
 
 ### `new` command:
@@ -45,32 +46,28 @@ optional arguments:
 ## List of commands
 
 ```
-print-character   Usage: print-character
-                  Print a complete view of your character
-                  Alternative names: print, show-character, show, character
+print           Usage: print [all/character/attributes/skills/plan]
+                Print information about your character, attributes, skills, or level-
+                up plan
+                Alternative names: show
+set-value       Usage: set-value { level | attribute | skill } [name] value
+                Utility to set-up your character after creation. Sub-commands
+                'attribute' and 'skill' require a 'name' argument (i.e. name of the
+                attribute or skill whose value is being set).
+                Alternative names: setvalue, set-val, setval
+increase-skill  Usage: increase-skill [value]
+                Increase a skill by 1 point. Argument 'value' can be used to increase
+                (or decrease if negative) by more points.
+                Alternative names: increase, inc-skill, inc
+level-up        Usage: level-up att1 att2 att3
+                Level up your character by one level. Command arguments are the three,
+                unique attributes that you want to increase during the leveling up.
+                Alternative names: levelup, level, up
+save            Saves the character to a (pickle) file. A different file is created
+                for each character level. If a file exists for a given level, it is
+                overwriten.
+quit            Quits this program. No changes are saved.
+                Alternative names: exit
+help            Shows this help
 
-set-value         Usage: set-value { level | attribute | skill } [name] value
-                  Utility to set-up your character after creation. Sub-commands
-                  'attribute' and 'skill' require a 'name' argument (i.e. name of the
-                  attribute or skill whose value is being set).
-                  Alternative names: setvalue, set-val, setval
-
-increase-skill    Usage: increase-skill [value]
-                  Increase a skill by 1 point. Argument 'value' can be used to increase
-                  (or decrease if negative) by more points.
-                  Alternative names: increase, inc
-
-level-up          Usage: level-up att1 att2 att3
-                  Level up your character by one level. Command arguments are the three,
-                  unique attributes that you want to increase during the leveling up.
-                  Alternative names: levelup, level, up
-
-save              Saves the character to a (pickle) file. A different file is created
-                  for each character level. If a file exists for a given level, it is
-                  overwriten.
-
-quit              Quits this program. No changes are saved.
-                  Alternative names: exit
-
-help              Shows this help
 ```
