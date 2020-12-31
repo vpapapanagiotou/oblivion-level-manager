@@ -3,6 +3,7 @@ from typing import List
 from tabulate import tabulate
 
 from tools.checks import is_typed_list
+from tools.formatting import format_base, BColors
 from tools.namedobject import NamedObject, find_unique_by_name, get_unique_by_name, get_unique_by_names
 
 
@@ -206,3 +207,13 @@ class Character(NamedObject):
         skill.is_major = is_major
 
         return skill.get_name(), skill.is_major
+
+
+def format_skill(skill: Skill) -> str:
+    assert isinstance(skill, Skill)
+
+    name: str = skill.get_name()
+    if skill.is_major:
+        name = format_base(name, BColors.BOLD)
+
+    return name

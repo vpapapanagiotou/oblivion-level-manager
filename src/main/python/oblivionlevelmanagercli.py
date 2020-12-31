@@ -61,7 +61,9 @@ class OblivionLevelManagerCLI:
         for command in self.commands:
             if command.is_command(command_name):
                 command.run(character, command_args)
-                break
+                return
+
+        print("Command not found: " + command_name)
 
 
 if __name__ == "__main__":

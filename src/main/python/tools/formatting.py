@@ -1,6 +1,5 @@
 from enum import Enum
 
-from character import Skill
 from tools.checks import is_typed_list
 
 
@@ -30,11 +29,7 @@ def format_base(s: str, fmt) -> str:
     return s
 
 
-def format_skill(skill: Skill) -> str:
-    assert isinstance(skill, Skill)
+def format_error_message(msg: str) -> str:
+    assert isinstance(msg, str)
 
-    name: str = skill.get_name()
-    if skill.is_major:
-        name = format_base(name, BColors.BOLD)
-
-    return name
+    return format_base(format_base("Error: ", BColors.BOLD), BColors.FAIL) + format_base(msg, BColors.FAIL)

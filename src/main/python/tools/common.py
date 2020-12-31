@@ -2,6 +2,7 @@ from traceback import print_tb
 from typing import List
 
 from tools.checks import is_typed_list
+from tools.formatting import format_error_message
 
 
 def find(b: List[bool]) -> List[int]:
@@ -39,6 +40,15 @@ def simple_string_check(base: str, pattern: str) -> bool:
 
 
 def print_exception(e: Exception, message: str = ""):
+    if message == "":
+        error_message: str = str(e)
+    else:
+        error_message: str = message + "\n" + str(e)
+
+    print(format_error_message(error_message))
+
+
+def print_exception_for_debugging(e: Exception, message: str = ""):
     print('---- EXCEPTION ----')
     print("type:", type(e))
     print("args:", e.args)

@@ -32,7 +32,6 @@ class BaseCommand(NamedObject):
             self._run(character, args)
         except Exception as e:
             print_exception(e)
-            raise  # debug
 
     def _run(self, character: Character, args: List[str]) -> NoReturn:
         raise NotImplementedError("Command not implemented: " + self.name)

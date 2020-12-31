@@ -2,10 +2,10 @@ from typing import List, NoReturn
 
 from tabulate import tabulate
 
-from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase
+from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase, format_skill
 from clitools.basecommand import BaseCommand
 from tools.common import simple_string_check
-from tools.formatting import format_skill, format_base, BColors
+from tools.formatting import format_base, BColors
 
 
 class PrintCommand(BaseCommand):

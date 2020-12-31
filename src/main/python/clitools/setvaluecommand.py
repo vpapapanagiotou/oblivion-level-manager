@@ -12,6 +12,7 @@ class SetValueCommand(BaseCommand):
         self.add_alternative_name("setvalue")
         self.add_alternative_name("set-val")
         self.add_alternative_name("setval")
+        self.add_alternative_name("set")
 
     def get_help_string(self) -> List[str]:
         usage: str = "Usage: " + self.name + " {level|attribute|skill} [name] value"
