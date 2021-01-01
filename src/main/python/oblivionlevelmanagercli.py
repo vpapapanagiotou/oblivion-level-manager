@@ -1,7 +1,7 @@
 import pickle
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import List
+from typing import List, NoReturn
 
 from character import Character
 from clitools.basecommand import BaseCommand
@@ -14,6 +14,7 @@ from clitools.quitcommand import QuitCommand
 from clitools.savecommand import SaveCommand
 from clitools.setvaluecommand import SetValueCommand
 from tools.common import print_exception
+from tools.formatting import format_error_message, format_base, BColors
 
 start_message: str = """
 The Elder Scrolls IV: Oblivion
@@ -21,6 +22,12 @@ The Elder Scrolls IV: Oblivion
 
 
 Type 'help' for a list of commands."""
+
+unknown_error_message: str = "An unknown error has occurred. This is most probably a bug."
+
+tmp = "An unknown exception has occurred. It is possible that the command failed and the " + \
+      "character may be at a 'broken' state. You should avoid saving if you are unsure " + \
+      "what happened. This is most probably a bug."
 
 
 class OblivionLevelManagerCLI:
@@ -30,48 +37,81 @@ class OblivionLevelManagerCLI:
         self.character: Character = character
 
         help_command: HelpCommand = HelpCommand()
-        self.commands: List[BaseCommand] = [PrintCommand(), SetValueCommand(), IncreaseSkillCommand(), LevelUpCommand(),
-                                            PlanCommand(), SaveCommand(), QuitCommand(), help_command]
+        self.commands: List[BaseCommand] = [PrintCommand(),
+                                            SetValueCommand(),
+                                            IncreaseSkillCommand(),
+                                            LevelUpCommand(),
+                                            PlanCommand(),
+                                            SaveCommand(),
+                                            QuitCommand(),
+                                            help_command]
+
         help_command.generate_help(self.commands)
 
-    def start(self):
+    def start_interactive(self):
         print(start_message)
 
         while True:
+            # This try is probably redundant because _run_cli_interaction handles exceptions internally
             try:
-                self._run_cli_iteration()
+                self._run_cli_interaction()
             except Exception as e:
-                print_exception(e,
-                                "An unknown exception has occurred. It is possible that the command failed and the " +
-                                "character may be at a 'broken' state. You should avoid saving if you are unsure what" +
-                                " happened.")
-                raise  # debug
+                print_exception(e, unknown_error_message)
 
-    def _run_cli_iteration(self):
-        user_input: List[str] = []
+    def _run_cli_interaction(self) -> NoReturn:
+        user_input: str = ""
         try:
-            user_input = input("\n> ").split()
+            user_input = input("\n> ")
         except Exception as e:
-            print_exception(e, "Error: not valid command: " + " ".join(user_input))
+            print_exception(e, unknown_error_message)
             return
 
         if len(user_input) == 0:
             return
 
-        command_name = user_input[0]
-        command_args = user_input[1:]
+        try:
+            self._run_command_str(user_input)
+        except Exception as e:
+            print_exception(e, unknown_error_message)
+
+    def run_script(self, script: str) -> NoReturn:
+        assert isinstance(script, str)
+
+        command_strs: List[str] = script.split(";")
+
+        for command_str in command_strs:
+            try:
+                self._run_command_str(command_str)
+            except Exception as e:
+                print_exception(e, unknown_error_message)
+                break
+
+    def _run_command_str(self, command_str: str) -> NoReturn:
+        """
+        Parse and execute a command from a string.
+
+        :param command_str: A full command (with arguments)
+        """
+        assert isinstance(command_str, str)
+
+        split_command_str: List[str] = command_str.split()
+        command_name = split_command_str[0]
+        command_args = split_command_str[1:]
 
         for command in self.commands:
             if command.is_command(command_name):
                 command.run(character, command_args)
                 return
 
-        print("Command not found: " + command_name)
+        raise ValueError("Command not found: " + command_name)
 
 
 if __name__ == "__main__":
     parser: ArgumentParser = ArgumentParser()
-    parser.add_argument('--path', default=",", type=str, help="Path to load/save the character files")
+    parser.add_argument('--path', default=".", type=str, help="Path to load/save the character files")
+    parser.add_argument('--run', default="", type=str,
+                        help="Run a command or list of commands (separated by ;) and exit")
+
     sp = parser.add_subparsers(dest='action')
 
     parser_new = sp.add_parser('new', help="Create a new character")
@@ -81,6 +121,7 @@ if __name__ == "__main__":
     parser_load.add_argument('name', type=str, help="The name of the character to load")
     parser_load.add_argument('--level', default=0, type=int,
                              help="The level of the character to load (default: max available)")
+
 
     args: Namespace = parser.parse_args()
 
@@ -120,5 +161,13 @@ if __name__ == "__main__":
     else:
         raise ValueError("This should never be reached")
 
+    try:
+        character
+    except NameError:
+        print(format_error_message("Failed to create a character. Aborting...\n  This is probably a bug"))
+
     cli: OblivionLevelManagerCLI = OblivionLevelManagerCLI(character)
-    cli.start()
+    if args.run == "":
+        cli.start_interactive()
+    else:
+        cli.run_script(args.run)

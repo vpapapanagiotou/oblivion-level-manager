@@ -50,10 +50,10 @@ class SetValueCommand(BaseCommand):
             if len(args) != 3:
                 raise ValueError("'set-value skill' takes two extra arguments: name, value")
             try:
-                if simple_string_check("major", args[2]):
+                if _safe_simple_string_check("major", args[2]):
                     name, value = character.set_skill_mode(args[1], True)
                     value = "major" if value else "minor"
-                elif simple_string_check("minor", args[2]):
+                elif _safe_simple_string_check("minor", args[2]):
                     name, value = character.set_skill_mode(args[1], False)
                     value = "major" if value else "minor"
                 else:
@@ -65,3 +65,10 @@ class SetValueCommand(BaseCommand):
 
         else:
             raise ValueError("First argument should be 'level', 'attribute', or 'skill'")
+
+
+def _safe_simple_string_check(base, pattern) -> bool:
+    try:
+        return simple_string_check(base(base), str(pattern))
+    except:
+        return False
