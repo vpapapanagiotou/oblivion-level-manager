@@ -84,4 +84,4 @@ def tabulated_with_centered_header(tabulated: str, header: str) -> str:
     idx: int = tabulated.find("\n")
     cheader: str = centered_header(header, idx)
 
-    return cheader + "\n" + tabulated + "\n"
+    return cheader + "\n" + tabulated

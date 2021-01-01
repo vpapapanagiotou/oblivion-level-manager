@@ -25,10 +25,6 @@ Type 'help' for a list of commands."""
 
 unknown_error_message: str = "An unknown error has occurred. This is most probably a bug."
 
-tmp = "An unknown exception has occurred. It is possible that the command failed and the " + \
-      "character may be at a 'broken' state. You should avoid saving if you are unsure " + \
-      "what happened. This is most probably a bug."
-
 
 class OblivionLevelManagerCLI:
     def __init__(self, character: Character):

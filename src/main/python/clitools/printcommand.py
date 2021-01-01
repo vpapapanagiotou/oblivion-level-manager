@@ -29,8 +29,11 @@ class PrintCommand(BaseCommand):
 
         if simple_string_check("all", args[0]):
             print_summary(character)
+            print(" ")
             print_attributes(character)
+            print(" ")
             print_skills(character)
+            print(" ")
             print_plan(character)
         elif simple_string_check("character", args[0]):
             print_summary(character)
