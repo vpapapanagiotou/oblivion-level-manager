@@ -71,6 +71,7 @@ Luck) attributes:
 This creates a plan for improving Strength, Endurance, and Luck.
 
 The following screenshot is from an example where we have run the `print character` and `print plan` commands:
+
 ![Plan example screenshot](doc/plan_example.png)
 
 The most important information is in the last 3 columns of the plan. Column `pts@lvl` shows the skill points at the
