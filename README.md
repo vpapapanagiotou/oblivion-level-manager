@@ -135,13 +135,13 @@ set-value       Usage: set-value {level|attribute|skill} [name] value
                 'attribute' and 'skill' require a 'name' argument (i.e. name of the
                 attribute or skill whose value is being set).
                 Alternative names: setvalue, set-val, setval, set
-increase-skill  Usage: increase-skill [value]
+increase-skill  Usage: increase-skill name [value]
                 Increase a skill by 1 point. Argument 'value' can be used to increase
                 (or decrease if negative) by more points.
                 Alternative names: increase, inc-skill, inc
 level-up        Usage: level-up att1 att2 att3
                 Level up your character by one level. Command arguments are the three,
-                unique attributes that you want to increase during the leveling up.
+                unique attributes that you want to improve during the leveling up.
                 Alternative names: levelup, level, up
 plan            Usage: plan att1 att2 [att3]
                 Set a plan for current level. You can choose 2 or 3 attributes to plan
