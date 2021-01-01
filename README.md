@@ -63,6 +63,10 @@ level-up        Usage: level-up att1 att2 att3
                 Level up your character by one level. Command arguments are the three,
                 unique attributes that you want to increase during the leveling up.
                 Alternative names: levelup, level, up
+plan            Usage: plan att1 att2 [att3]
+                Set a plan for current level. You can choose 2 or 3 attributes to plan
+                a level (you should only choose 2 attributes if you plan to level-up
+                Luck). If you have already set a plan, it will bereplaced.
 save            Saves the character to a (pickle) file. A different file is created
                 for each character level. If a file exists for a given level, it is
                 overwriten.

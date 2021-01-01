@@ -46,6 +46,8 @@ def print_exception(e: Exception, message: str = ""):
         error_message: str = message + "\n" + str(e)
 
     print(format_error_message(error_message))
+    # Uncomment the following for debugging
+    # print_exception_for_debugging(e, message)
 
 
 def print_exception_for_debugging(e: Exception, message: str = ""):
@@ -56,3 +58,30 @@ def print_exception_for_debugging(e: Exception, message: str = ""):
     print("message:", message)
     print("stracktrace:")
     print_tb(e.__traceback__)
+    raise
+
+
+def centered_header(header: str, length: int = None) -> str:
+    assert isinstance(header, str)
+    assert isinstance(length, int) or length is None
+
+    header = "--- " + header + " ---"
+    nheader: int = len(header)
+
+    if nheader > length:
+        return header
+
+    nright: int = int((length - nheader) / 2)
+    nleft: int = length - nright - nheader
+
+    return ("-" * nright) + header + ("-" * nleft)
+
+
+def tabulated_with_centered_header(tabulated: str, header: str) -> str:
+    assert isinstance(tabulated, str)
+    assert isinstance(header, str)
+
+    idx: int = tabulated.find("\n")
+    cheader: str = centered_header(header, idx)
+
+    return cheader + "\n" + tabulated + "\n"

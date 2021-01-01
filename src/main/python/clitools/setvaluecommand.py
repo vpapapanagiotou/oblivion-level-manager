@@ -7,7 +7,7 @@ from tools.common import simple_string_check
 
 class SetValueCommand(BaseCommand):
     def __init__(self):
-        BaseCommand.__init__(self, "set-value")
+        super().__init__("set-value")
 
         self.add_alternative_name("setvalue")
         self.add_alternative_name("set-val")
@@ -16,7 +16,8 @@ class SetValueCommand(BaseCommand):
 
     def get_help_string(self) -> List[str]:
         usage: str = "Usage: " + self.name + " {level|attribute|skill} [name] value"
-        h: str = "Utility to set-up your character after creation. Sub-commands 'attribute' and 'skill' require a 'name' argument (i.e. name of the attribute or skill whose value is being set)."
+        h: str = "Utility to set-up your character after creation. Sub-commands 'attribute' and 'skill' require a " + \
+                 "'name' argument (i.e. name of the attribute or skill whose value is being set)."
 
         return [usage, h]
 

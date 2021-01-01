@@ -6,7 +6,7 @@ from clitools.basecommand import BaseCommand
 
 class QuitCommand(BaseCommand):
     def __init__(self):
-        BaseCommand.__init__(self, "quit")
+        super().__init__("quit")
 
         self.add_alternative_name("exit")
 

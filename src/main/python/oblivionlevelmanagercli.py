@@ -8,6 +8,7 @@ from clitools.basecommand import BaseCommand
 from clitools.helpcommand import HelpCommand
 from clitools.increaseskillcommand import IncreaseSkillCommand
 from clitools.levelupcommand import LevelUpCommand
+from clitools.plancommand import PlanCommand
 from clitools.printcommand import PrintCommand
 from clitools.quitcommand import QuitCommand
 from clitools.savecommand import SaveCommand
@@ -30,7 +31,7 @@ class OblivionLevelManagerCLI:
 
         help_command: HelpCommand = HelpCommand()
         self.commands: List[BaseCommand] = [PrintCommand(), SetValueCommand(), IncreaseSkillCommand(), LevelUpCommand(),
-                                            SaveCommand(), QuitCommand(), help_command]
+                                            PlanCommand(), SaveCommand(), QuitCommand(), help_command]
         help_command.generate_help(self.commands)
 
     def start(self):
@@ -41,7 +42,9 @@ class OblivionLevelManagerCLI:
                 self._run_cli_iteration()
             except Exception as e:
                 print_exception(e,
-                                "An unknown exception has occurred. It is possible that the command failed and the character may be at a 'broken' state. You should avoid saving if you are unsure what happened.")
+                                "An unknown exception has occurred. It is possible that the command failed and the " +
+                                "character may be at a 'broken' state. You should avoid saving if you are unsure what" +
+                                " happened.")
                 raise  # debug
 
     def _run_cli_iteration(self):

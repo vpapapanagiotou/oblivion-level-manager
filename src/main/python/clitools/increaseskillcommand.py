@@ -6,7 +6,7 @@ from clitools.basecommand import BaseCommand
 
 class IncreaseSkillCommand(BaseCommand):
     def __init__(self):
-        BaseCommand.__init__(self, "increase-skill")
+        super().__init__("increase-skill")
 
         self.add_alternative_name("increase")
         self.add_alternative_name("inc-skill")
@@ -14,7 +14,8 @@ class IncreaseSkillCommand(BaseCommand):
 
     def get_help_string(self) -> List[str]:
         usage: str = "Usage: " + self.name + " [value]"
-        h: str = "Increase a skill by 1 point. Argument 'value' can be used to increase (or decrease if negative) by more points."
+        h: str = "Increase a skill by 1 point. Argument 'value' can be used to increase (or decrease if negative) " + \
+                 "by more points."
 
         return [usage, h]
 

@@ -75,6 +75,6 @@ def get_unique_by_names(lst: List[NamedObjectChild], names: List[str],
     assert is_typed_list(names, str)
 
     idxs: List[int] = [find_unique_by_name(lst, name, objects_name) for name in names]
-    assert len(set(idxs)) == len(lst)
+    assert len(set(idxs)) == len(names)
 
     return [lst[idx] for idx in idxs]

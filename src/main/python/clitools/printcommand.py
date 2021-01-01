@@ -4,13 +4,13 @@ from tabulate import tabulate
 
 from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase, format_skill
 from clitools.basecommand import BaseCommand
-from tools.common import simple_string_check
+from tools.common import simple_string_check, tabulated_with_centered_header
 from tools.formatting import format_base, BColors
 
 
 class PrintCommand(BaseCommand):
     def __init__(self):
-        BaseCommand.__init__(self, "print")
+        super().__init__("print")
 
         self.add_alternative_name("show")
 
@@ -51,8 +51,7 @@ def print_summary(character: Character) -> NoReturn:
              ["Major skill increases", get_major_skills_increase(character.skills)],
              ["Minor skill increases", get_minor_skills_increase(character.skills)],
              ["Total skill increases", get_skills_increase(character.skills)]]
-    print("\nCHARACTER " + character.name)
-    print(tabulate(table))
+    print(tabulated_with_centered_header(tabulate(table), "CHARACTER " + character.name))
 
 
 def print_attributes(character: Character) -> NoReturn:
@@ -65,8 +64,7 @@ def print_attributes(character: Character) -> NoReturn:
         ln = [attribute.name, attribute.value, "+" + str(attribute.get_attribute_gain()),
               get_skills_increase(attribute.skills)]
         table.append(ln)
-    print("\nATTRIBUTES")
-    print(tabulate(table, headers=attribute_headers))
+    print(tabulated_with_centered_header(tabulate(table, headers=attribute_headers), "ATTRIBUTES"))
 
 
 def print_skills(character: Character) -> NoReturn:
@@ -84,12 +82,15 @@ def print_skills(character: Character) -> NoReturn:
             attribute_table.append(ln)
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
         table.extend(attribute_table)
-    print("\nSKILLS")
-    print(tabulate(table, headers=skill_headers))
+    print(tabulated_with_centered_header(tabulate(table, headers=skill_headers), "SKILLS"))
 
 
 def print_plan(character: Character) -> NoReturn:
     assert isinstance(character, Character)
+
+    if len(character.planned_attributes) == 0:
+        print("No plan has been set")
+        return
 
     plan_headers = ("Attribute", "pts", "Skill", "pts@" + str(character.level), "inc", "rem inc")
 
@@ -110,6 +111,4 @@ def print_plan(character: Character) -> NoReturn:
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
         attribute_table[0][1] = format_base(str(get_skills_increase(attribute.skills)), BColors.ITALIC)
         table.extend(attribute_table)
-
-    print("\nPLAN")
-    print(tabulate(table, headers=plan_headers, colalign=("left", "right",)))
+    print(tabulated_with_centered_header(tabulate(table, headers=plan_headers, colalign=("left", "right",)), "PLAN"))

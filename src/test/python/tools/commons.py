@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from tools.common import centered_header
 from tools.formatting import BColors
 
 
@@ -14,3 +15,11 @@ class BColorsTest(TestCase):
         print(BColors.BOLD.value + "Bold" + BColors.ENDC.value)
         print(BColors.ITALIC.value + "Italic" + BColors.ENDC.value)
         print(BColors.UNDERLINE.value + "Underline" + BColors.ENDC.value)
+
+    def test_centered_header(self):
+        print(centered_header("0123456789", 8))
+        print(centered_header("0123456789", 10))
+        print(centered_header("0123456789", 12))
+        print(centered_header("0123456789", 18))
+        print(centered_header("0123456789", 19))
+        print(centered_header("0123456789", 30))

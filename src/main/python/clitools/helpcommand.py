@@ -10,7 +10,7 @@ from tools.checks import is_typed_list
 
 class HelpCommand(BaseCommand):
     def __init__(self):
-        BaseCommand.__init__(self, "help")
+        super().__init__("help")
 
         self.help: str = "not initialized yet"
 

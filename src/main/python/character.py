@@ -152,12 +152,14 @@ class Character(NamedObject):
             skill.value += skill.level_ups
             skill.level_ups = 0
 
-    def set_plan(self, attribute_names: List[str]) -> None:
+    def set_plan(self, attribute_names: List[str]) -> List[str]:
         # Type checking is performed by 'get_unique_by_names'
         attributes: List[Attribute] = get_unique_by_names(self.attributes, attribute_names)
         assert len(attributes) == 2 or len(attributes) == 3
 
         self.planned_attributes: List[Attribute] = attributes
+
+        return [attribute.get_name() for attribute in attributes]
 
     def get_remaining_skill_increase(self, skill: Skill):
         assert isinstance(skill, Skill)
