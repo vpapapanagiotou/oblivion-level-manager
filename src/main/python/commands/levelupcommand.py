@@ -15,7 +15,7 @@ class LevelUpCommand(BaseCommand):
     def get_help_string(self) -> List[str]:
         usage: str = "Usage: " + self.name + " att1 att2 att3"
         h: str = "Level up your character by one level. Command arguments are the three, unique attributes that " + \
-                 "you want to increase during the leveling up."
+                 "you want to improve during the leveling up."
 
         return [usage, h]
 
