@@ -4,15 +4,15 @@ from pathlib import Path
 from typing import List, NoReturn
 
 from character import Character
-from clitools.basecommand import BaseCommand
-from clitools.helpcommand import HelpCommand
-from clitools.increaseskillcommand import IncreaseSkillCommand
-from clitools.levelupcommand import LevelUpCommand
-from clitools.plancommand import PlanCommand
-from clitools.printcommand import PrintCommand
-from clitools.quitcommand import QuitCommand
-from clitools.savecommand import SaveCommand
-from clitools.setvaluecommand import SetValueCommand
+from commands.basecommand import BaseCommand
+from commands.helpcommand import HelpCommand
+from commands.increaseskillcommand import IncreaseSkillCommand
+from commands.levelupcommand import LevelUpCommand
+from commands.plancommand import PlanCommand
+from commands.printcommand import PrintCommand
+from commands.quitcommand import QuitCommand
+from commands.savecommand import SaveCommand
+from commands.setvaluecommand import SetValueCommand
 from tools.common import print_exception
 from tools.formatting import format_error_message, format_base, BColors
 

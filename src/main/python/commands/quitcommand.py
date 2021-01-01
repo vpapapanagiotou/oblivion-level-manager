@@ -1,7 +1,7 @@
 from typing import List, NoReturn
 
 from character import Character
-from clitools.basecommand import BaseCommand
+from commands.basecommand import BaseCommand
 
 
 class QuitCommand(BaseCommand):

@@ -4,7 +4,7 @@ from typing import List, NoReturn
 from tabulate import tabulate
 
 from character import Character
-from clitools.basecommand import BaseCommand
+from commands.basecommand import BaseCommand
 from tools.checks import is_typed_list
 
 
