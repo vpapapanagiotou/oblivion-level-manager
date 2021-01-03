@@ -14,12 +14,14 @@ class SetValueCommand(BaseCommand):
         self.add_alternative_name("setval")
         self.add_alternative_name("set")
 
+    def get_usage_string(self) -> str:
+        return self.name + " {level|attribute|skill} [name] value"
+
     def get_help_string(self) -> List[str]:
-        usage: str = "Usage: " + self.name + " {level|attribute|skill} [name] value"
         h: str = "Utility to set-up your character after creation. Sub-commands 'attribute' and 'skill' require a " + \
                  "'name' argument (i.e. name of the attribute or skill whose value is being set)."
 
-        return [usage, h]
+        return [h]
 
     def _run(self, character: Character, args: List[str]) -> NoReturn:
         if len(args) != 2 and len(args) != 3:

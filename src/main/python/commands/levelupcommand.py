@@ -12,12 +12,14 @@ class LevelUpCommand(BaseCommand):
         self.add_alternative_name("level")
         self.add_alternative_name("up")
 
+    def get_usage_string(self) -> str:
+        return self.name + " att1 att2 att3"
+
     def get_help_string(self) -> List[str]:
-        usage: str = "Usage: " + self.name + " att1 att2 att3"
         h: str = "Level up your character by one level. Command arguments are the three, unique attributes that " + \
                  "you want to improve during the leveling up."
 
-        return [usage, h]
+        return [h]
 
     def _run(self, character: Character, args: List[str]) -> NoReturn:
         character.level_up(args)

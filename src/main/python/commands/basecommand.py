@@ -36,5 +36,9 @@ class BaseCommand(NamedObject):
     def _run(self, character: Character, args: List[str]) -> NoReturn:
         raise NotImplementedError("Command not implemented: " + self.name)
 
+    def get_usage_string(self) -> str:
+        return self.get_name()
+        # raise NotImplementedError("Command not implemented: " + self.name)
+
     def get_help_string(self) -> List[str]:
         raise NotImplementedError("Command not implemented: " + self.name)

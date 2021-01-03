@@ -12,12 +12,14 @@ class IncreaseSkillCommand(BaseCommand):
         self.add_alternative_name("inc-skill")
         self.add_alternative_name("inc")
 
+    def get_usage_string(self) -> str:
+        return self.name + " name [value]"
+
     def get_help_string(self) -> List[str]:
-        usage: str = "Usage: " + self.name + " name [value]"
         h: str = "Increase a skill by 1 point. Argument 'value' can be used to increase (or decrease if negative) " + \
                  "by more points."
 
-        return [usage, h]
+        return [h]
 
     def _run(self, character: Character, args: List[str]) -> NoReturn:
         if len(args) == 0:
