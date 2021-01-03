@@ -83,11 +83,18 @@ def print_skills(character: Character) -> NoReturn:
             continue
         attribute_table = []
         for skill in attribute.skills:
-            ln = ["", format_skill(skill), skill.value, skill.level_ups, skill.value + skill.level_ups]
+            ln = ["", format_skill(skill), skill.value, _zero_to_empty(skill.level_ups), skill.value + skill.level_ups]
             attribute_table.append(ln)
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
         table.extend(attribute_table)
     print(tabulated_with_centered_header(tabulate(table, headers=skill_headers), "SKILLS"))
+
+
+def _zero_to_empty(x: int) -> int:
+    if x == 0:
+        return None
+    else:
+        return x
 
 
 def print_plan(character: Character) -> NoReturn:
