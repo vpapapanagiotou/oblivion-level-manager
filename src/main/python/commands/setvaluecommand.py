@@ -69,6 +69,6 @@ class SetValueCommand(BaseCommand):
 
 def _safe_simple_string_check(base, pattern) -> bool:
     try:
-        return simple_string_check(base(base), str(pattern))
+        return simple_string_check(str(base), str(pattern))
     except:
         return False
