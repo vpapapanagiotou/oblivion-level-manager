@@ -201,7 +201,7 @@ def get_skills_increase(skills: List[Skill]) -> int:
 def get_major_skills_increase(skills: List[Skill]) -> int:
     assert is_typed_list(skills, Skill)
 
-    return sum([skill.level_ups for skill in skills if skill.is_major])
+    return sum([skill.level_ups for skill in skills if skill.is_major and skill.value < 100])
 
 
 def get_minor_skills_increase(skills: List[Skill]) -> int:
