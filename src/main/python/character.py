@@ -151,7 +151,7 @@ class Character(NamedObject):
         if skill.is_major:
             d1: int = 10 - get_major_skills_increase(self.skills)
         else:
-            d1: int = 10 * (len(self.planned_attributes) - 1) - get_minor_skills_increase(self.skills)
+            d1: int = 10
 
         d2: int = 10 - get_skills_increase(skill.attribute.skills)
 

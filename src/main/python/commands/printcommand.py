@@ -109,7 +109,7 @@ def print_skills(character: Character) -> NoReturn:
             continue
         attribute_table = []
         for skill in attribute.skills:
-            ln = ["", _fmt_skill_name(skill), skill.value, _fmt_skill_increase(skill.level_ups),
+            ln = [None, _fmt_skill_name(skill), skill.value, _fmt_skill_increase(skill.level_ups),
                   skill.value + skill.level_ups]
             attribute_table.append(ln)
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
@@ -124,7 +124,7 @@ def print_plan(character: Character) -> NoReturn:
         print("No plan has been set")
         return
 
-    plan_headers = ("Attribute", "pts", "Skill", "pts@" + str(character.level), "inc", "rem inc")
+    plan_headers = ("Attribute", "pts", "Skill", "pts@" + str(character.level), "inc", "pts", "rem inc")
 
     table = []
     for attribute in character.planned_attributes:
@@ -137,6 +137,7 @@ def print_plan(character: Character) -> NoReturn:
                 _fmt_skill_name(skill),
                 skill.value,
                 _fmt_skill_increase(skill.level_ups),
+                skill.value + skill.level_ups,
                 _fmt_skill_rem(character.get_remaining_skill_increase(skill))
             ])
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
