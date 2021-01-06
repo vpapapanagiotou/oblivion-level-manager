@@ -1,4 +1,4 @@
-from typing import List, NoReturn
+from typing import List, NoReturn, Union
 
 from tabulate import tabulate
 
@@ -16,7 +16,7 @@ def _fmt_skill_name(skill: Skill) -> str:
     return name
 
 
-def _fmt_skill_increase(x: int) -> int:
+def _fmt_skill_increase(x: int) -> Union[int, None]:
     if x == 0:
         return None
     else:

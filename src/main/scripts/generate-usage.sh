@@ -10,14 +10,9 @@ APP="../python/oblivionlevelmanagercli.py"
 
 # Initial checks
 if [[ "${ENV_NAME}" != "${CONDA_DEFAULT_ENV}" ]]; then
-    SHOULD_CHANGE_ENV=1
-else
-    SHOULD_CHANGE_ENV=0
-fi
-
-# Change conda environment if required
-if [[ ${SHOULD_CHANGE_ENV} = 1 ]]; then
-    conda activate ${ENV_NAME}
+    echo "Error: this script requires the conda environment (i.e. ${ENV_NAME})."
+    echo "Abort."
+    exit 1
 fi
 
 # Generate
@@ -51,8 +46,3 @@ echo '```'
 python ${APP} --run help new tmp
 echo '```'
 echo ''
-
-# Revert back to previous conda environment if required
-if [[ ${SHOULD_CHANGE_ENV} = 1 ]]; then
-    conda deactivate
-fi
