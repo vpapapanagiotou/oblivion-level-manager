@@ -2,10 +2,36 @@ from typing import List, NoReturn
 
 from tabulate import tabulate
 
-from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase, format_skill
+from character import Character, get_major_skills_increase, get_minor_skills_increase, get_skills_increase, Skill
 from commands.basecommand import BaseCommand
 from tools.common import simple_string_check, tabulated_with_centered_header
 from tools.formatting import format_base, BColors
+
+
+def _fmt_skill_name(skill: Skill) -> str:
+    name: str = skill.get_name()
+    if skill.is_major:
+        name = format_base(name, BColors.BOLD)
+
+    return name
+
+
+def _fmt_skill_increase(x: int) -> int:
+    if x == 0:
+        return None
+    else:
+        return x
+
+
+def _fmt_skill_rem(n: int) -> str:
+    if n > 1:
+        s: str = str(n)
+    elif n == 1:
+        s: str = format_base(str(n), BColors.WARNING)
+    else:
+        s: str = format_base(str(n), BColors.FAIL)
+
+    return s
 
 
 class PrintCommand(BaseCommand):
@@ -83,18 +109,12 @@ def print_skills(character: Character) -> NoReturn:
             continue
         attribute_table = []
         for skill in attribute.skills:
-            ln = ["", format_skill(skill), skill.value, _zero_to_empty(skill.level_ups), skill.value + skill.level_ups]
+            ln = ["", _fmt_skill_name(skill), skill.value, _fmt_skill_increase(skill.level_ups),
+                  skill.value + skill.level_ups]
             attribute_table.append(ln)
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
         table.extend(attribute_table)
     print(tabulated_with_centered_header(tabulate(table, headers=skill_headers), "SKILLS"))
-
-
-def _zero_to_empty(x: int) -> int:
-    if x == 0:
-        return None
-    else:
-        return x
 
 
 def print_plan(character: Character) -> NoReturn:
@@ -111,16 +131,19 @@ def print_plan(character: Character) -> NoReturn:
 
         attribute_table = []
         for skill in attribute.skills:
-            d: int = character.get_remaining_skill_increase(skill)
-            if d > 0:
-                dstr: str = str(d)
-            elif d == 0:
-                dstr: str = format_base(str(d), BColors.WARNING)
-            else:
-                dstr: str = format_base(str(d), BColors.FAIL)
-
-            attribute_table.append([" ", " ", format_skill(skill), skill.value, skill.level_ups, dstr])
+            attribute_table.append([
+                None,
+                None,
+                _fmt_skill_name(skill),
+                skill.value,
+                _fmt_skill_increase(skill.level_ups),
+                _fmt_skill_rem(character.get_remaining_skill_increase(skill))
+            ])
         attribute_table[0][0] = format_base(attribute.get_name(), BColors.ITALIC)
         attribute_table[0][1] = format_base(str(get_skills_increase(attribute.skills)), BColors.ITALIC)
         table.extend(attribute_table)
-    print(tabulated_with_centered_header(tabulate(table, headers=plan_headers, colalign=("left", "right",)), "PLAN"))
+
+    tbl: str = tabulated_with_centered_header(tabulate(table, headers=plan_headers, colalign=("left", "right",)),
+                                              "PLAN")
+    nt: str = "Major skill increase remaining: " + _fmt_skill_rem(10 - get_major_skills_increase(character.skills))
+    print(tbl + "\n" + nt)

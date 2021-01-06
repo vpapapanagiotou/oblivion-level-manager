@@ -14,7 +14,7 @@ from commands.quitcommand import QuitCommand
 from commands.savecommand import SaveCommand
 from commands.setvaluecommand import SetValueCommand
 from tools.common import print_exception
-from tools.formatting import format_error_message, format_base, BColors
+from tools.formatting import format_error_message
 
 start_message: str = """
 The Elder Scrolls IV: Oblivion
@@ -117,7 +117,6 @@ if __name__ == "__main__":
     parser_load.add_argument('name', type=str, help="The name of the character to load")
     parser_load.add_argument('--level', default=0, type=int,
                              help="The level of the character to load (default: max available)")
-
 
     args: Namespace = parser.parse_args()
 

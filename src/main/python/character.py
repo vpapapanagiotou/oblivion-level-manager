@@ -3,7 +3,6 @@ from typing import List
 from tabulate import tabulate
 
 from tools.checks import is_typed_list
-from tools.formatting import format_base, BColors
 from tools.namedobject import NamedObject, find_unique_by_name, get_unique_by_name, get_unique_by_names
 
 
@@ -22,24 +21,6 @@ class Skill(NamedObject):
 
     def increase(self, value: int = 1):
         self.level_ups += value
-
-
-def get_skills_increase(skills: List[Skill]) -> int:
-    assert is_typed_list(skills, Skill)
-
-    return sum([skill.level_ups for skill in skills])
-
-
-def get_major_skills_increase(skills: List[Skill]) -> int:
-    assert is_typed_list(skills, Skill)
-
-    return sum([skill.level_ups for skill in skills if skill.is_major])
-
-
-def get_minor_skills_increase(skills: List[Skill]) -> int:
-    assert is_typed_list(skills, Skill)
-
-    return sum([skill.level_ups for skill in skills if not skill.is_major])
 
 
 class Attribute(NamedObject):
@@ -211,11 +192,19 @@ class Character(NamedObject):
         return skill.get_name(), skill.is_major
 
 
-def format_skill(skill: Skill) -> str:
-    assert isinstance(skill, Skill)
+def get_skills_increase(skills: List[Skill]) -> int:
+    assert is_typed_list(skills, Skill)
 
-    name: str = skill.get_name()
-    if skill.is_major:
-        name = format_base(name, BColors.BOLD)
+    return sum([skill.level_ups for skill in skills])
 
-    return name
+
+def get_major_skills_increase(skills: List[Skill]) -> int:
+    assert is_typed_list(skills, Skill)
+
+    return sum([skill.level_ups for skill in skills if skill.is_major])
+
+
+def get_minor_skills_increase(skills: List[Skill]) -> int:
+    assert is_typed_list(skills, Skill)
+
+    return sum([skill.level_ups for skill in skills if not skill.is_major])
