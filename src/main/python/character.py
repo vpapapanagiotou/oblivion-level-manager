@@ -148,14 +148,19 @@ class Character(NamedObject):
         if skill.attribute not in self.planned_attributes:
             return 0
 
+        # Limit by major skill increase
         if skill.is_major:
             d1: int = 10 - get_major_skills_increase(self.skills)
         else:
             d1: int = 10
 
+        # Limit by attribute skill increase
         d2: int = 10 - get_skills_increase(skill.attribute.skills)
 
-        return min(d1, d2)
+        # Limit by max skill level
+        d3: int = 100 - skill.value
+
+        return min(d1, d2, d3)
 
     def set_level_value(self, value: int) -> int:
         assert isinstance(value, int)
