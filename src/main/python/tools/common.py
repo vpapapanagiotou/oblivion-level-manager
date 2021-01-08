@@ -51,7 +51,7 @@ def print_exception(e: Exception, message: str = ""):
 
 
 def print_exception_for_debugging(e: Exception, message: str = ""):
-    print('---- EXCEPTION ----')
+    print('---- EXCEPTION [DEBUG MODE] ----')
     print("type:", type(e))
     print("args:", e.args)
     print("exception:", e)

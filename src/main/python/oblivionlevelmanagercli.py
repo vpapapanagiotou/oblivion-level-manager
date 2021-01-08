@@ -68,7 +68,7 @@ class OblivionLevelManagerCLI:
         try:
             self._run_command_str(user_input)
         except Exception as e:
-            print_exception(e, unknown_error_message)
+            print_exception(e)
 
     def run_script(self, script: str) -> NoReturn:
         assert isinstance(script, str)
@@ -79,7 +79,7 @@ class OblivionLevelManagerCLI:
             try:
                 self._run_command_str(command_str)
             except Exception as e:
-                print_exception(e, unknown_error_message)
+                print_exception(e)
                 break
 
     def _run_command_str(self, command_str: str) -> NoReturn:

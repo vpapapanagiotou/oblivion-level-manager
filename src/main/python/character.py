@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, NoReturn
 
 from tabulate import tabulate
 
@@ -19,7 +19,7 @@ class Skill(NamedObject):
         self.level_ups: int = 0
         self.attribute: Attribute = None
 
-    def increase(self, value: int = 1):
+    def increase(self, value: int = 1) -> NoReturn:
         self.level_ups += value
 
 
@@ -41,14 +41,14 @@ class Attribute(NamedObject):
 
         return any([skill.is_named(name) for skill in self.skills])
 
-    def append_skill(self, skill: Skill):
+    def append_skill(self, skill: Skill) -> NoReturn:
         assert isinstance(skill, Skill)
         assert skill.attribute is None
 
         self.skills.append(skill)
         skill.attribute = self
 
-    def set_skills(self, skills: List[Skill]):
+    def set_skills(self, skills: List[Skill]) -> NoReturn:
         assert is_typed_list(skills, Skill, True)
 
         if skills is None or len(skills) == 0:

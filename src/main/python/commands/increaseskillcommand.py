@@ -29,7 +29,7 @@ class IncreaseSkillCommand(BaseCommand):
             try:
                 skill_name, attribute_name = character.increase_skill(args[0])
                 print("Skill " + skill_name + " [" + attribute_name + "] increased!")
-            except ValueError as e:
+            except ValueError or AssertionError as e:
                 e.args += ("Could not increase skill",)
                 raise
 
@@ -38,7 +38,7 @@ class IncreaseSkillCommand(BaseCommand):
                 increase_value: int = int(args[1])
                 skill_name, attribute_name = character.increase_skill(args[0], increase_value)
                 print("Skill " + skill_name + " [" + attribute_name + "] increased by " + str(increase_value) + "!")
-            except ValueError as e:
+            except ValueError or AssertionError as e:
                 e.args += ("Could not increase skill",)
                 raise
 
