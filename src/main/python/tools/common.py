@@ -32,30 +32,37 @@ def simple_string_check(base: str, pattern: str) -> bool:
     """
     assert isinstance(base, str)
     assert isinstance(pattern, str)
-    assert 2 < len(base)
-    assert 2 < len(pattern)
+
+    if len(base) < 2:
+        raise ValueError("Base string '" + base + "' is too short")
+    if len(pattern) < 2:
+        raise ValueError("Pattern string '" + pattern + "' is too short")
 
     n = len(pattern)
     return base.lower()[:n] == pattern.lower()
 
 
-def print_exception(e: Exception, message: str = ""):
-    if message == "":
-        error_message: str = str(e)
-    else:
-        error_message: str = message + "\n" + str(e)
+def print_exception(e: Exception):
+    assert isinstance(e, Exception)
 
-    print(format_error_message(error_message))
+    n: int = len(e.args)
+    if n == 0:
+        msg: str = "Unknown error"
+    else:
+        msg: str = e.args[-1]
+        for i in range(n - 1):
+            msg += "\n  " + e.args[-2 - i]
+
+    print(format_error_message(msg))
     # Uncomment the following for debugging
     # print_exception_for_debugging(e, message)
 
 
-def print_exception_for_debugging(e: Exception, message: str = ""):
+def print_exception_for_debugging(e: Exception):
     print('---- EXCEPTION [DEBUG MODE] ----')
     print("type:", type(e))
     print("args:", e.args)
     print("exception:", e)
-    print("message:", message)
     print("stracktrace:")
     print_tb(e.__traceback__)
     raise
